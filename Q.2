@@ -1,0 +1,107 @@
+class LinearSystemSolver:
+    def matinA(sf,x,y):
+        from numpy import zeros,array
+        a_=zeros((x,y),float)
+        for i in range(x):
+            for j in range(y):
+                a_[i,j]=float(input('enter value at a['+str(i+1)+']['+str(j+1)+']  '))
+        return a_
+    def matinb(sf,x):
+        from numpy import zeros,array
+        b_=zeros((x),int)
+        for i in range(x):
+            b_[i]=int(input('enter value at b['+str(i+1)+']  '))
+        return b_
+    def concat(sf,x,y,a,b):
+        from numpy import zeros,array
+        c_=zeros((x,y+1),float)
+        for i in range(x):
+            for j in range(y):
+                c_[i,j]=a[i,j]
+        for i in range(x):
+            c_[i,y]=b[i]
+        return c_
+    def bsubs(x,y,c):
+        x_=zeros((x),float)
+        for i in range(x-1,-1,-1):
+            m_[i]=c[i,y]
+            for j in range(i+1,y):
+                m_[i]-=c[i,j]*m_[j]
+            m_[i]=m_[i]/c[i,i]
+        return m_
+    def pivot(x,y,c):
+        for i in range(0,y):
+            if c[i,i]==0:
+                for j in range(i+1,x):
+                    if c[j,i]!=0:
+                        temp_rw=c[i].copy()
+                        c[i],c[j]=c[j],temp_rw
+        return(c)
+    def solve(sf,metd):
+
+        if metd=='gauss':
+
+            x,y=int(input('row ')),int(input('column'))
+            a=sf.matinA(x,y)
+            b=sf.matinb(x)
+            c=sf.concat(x,y,a,b)
+            c=sf.pivot(x,y,c)
+
+            for k in range(i+1,x):
+                r=c[k,i]/c[i,i]
+                if r!=0:
+                    for d  in range(0,y+1):
+                        c[k,d]-=r*c[i,d]
+
+                m=sf.bsubs(x,y,c)
+                return(m)
+
+        if metd=='gauss-jordan':
+
+            x,y=int(input('row ')),int(input('column'))
+            a=sf.matinA(x,y)
+            b=sf.matinb(x)
+            c=sf.concat(x,y,a,b)
+            c=sf.pivot(x,y,c)
+
+            for i in range(0,y):
+                for k in range(0,y):
+                    if k!=i:
+                        r=c[k,i]/c[i,i]
+                        if r!=0:
+                            for d  in range(0,y+1):
+                                c[k,d]-=r*c[i,d]
+
+            m=sf.bsubs(x,y,c)
+            return(m)
+
+
+        elif metd =='gauss-siedel':
+
+            import numpy as np
+            y=int(input('order'))
+            a=sf.matinA(y,y)
+            b=sf.matinb(y)
+            eps,D,L,U=np.zeros(y),np.zeros(y),np.zeros(y),np.zeros(y)
+            for i in range(y) :
+                eps[i]=.0000001                  #value for epsilon
+            lmt=20                                     #iteration limit
+
+            for i in range(y):
+                for j in range(y):
+                    if i==j:
+                        D[i,j]=a[i,j]
+                    elif i>j:
+                        L[i,j]=a[i,j]
+            U=A-L-D
+
+            for i in range(lmt):
+                if np.greater(abs(np.dot(a,m)-b),eps).any():
+                    q=- (np.dot(np.linalg.inv(L+D), b + np.dot(U, m)))
+                    m=q
+                else:
+                    break
+            return(m)
+
+        else:
+            return NULL
