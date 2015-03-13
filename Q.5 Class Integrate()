@@ -1,0 +1,50 @@
+#Group-5
+#Q.5
+>>> class Integrate():
+
+        #a is the lower limit of integration
+        #b is the upper limit of integration
+        #n is the number of divisions and more the number of divisions,more is the accuracy
+        #fn is the function whose integration has to be done
+        #method : 1.Trapezoidal Rule 2.Simpsons Rule
+        #input : a,b,n,fn
+
+	def TrapezoidalRule(a,b,n,fn):              #Method:1,function.1
+		sol=fn(a)
+		for i in range(1,n):
+			sol=sol+2*fn(a+(i*(b-a))/n)
+		sol=sol+fn(b)
+		sol=(sol*(b-a))/(2*n)                     #We evalute the value needed.
+		return sol                                #Now it's time to return this value.
+
+	def SimpsonsRule(a,b,n,fn):                 #Method:2,function.2
+		sol=fn(a)
+		for i in range(1,n,2):
+			sol=sol+ 4*fn(a+(i*(b-a))/n)
+		for i in range(2,n,2):
+			sol=sol+ 2*fn(a+(i*(b-a))/n)
+		sol=sol+fn(b)
+		sol=(sol*(b-a))/(3*n)                     #We evalute the value needed.
+		return sol                                #Now it's time to return this value.
+
+	def solve(self,a,b,n,fn,method):            #solve() function :that calls either of the two above functions according to the input method.
+		if(method=='trapezoid'):
+			sol=TrapezoidalRule(a,b,n,fn)
+			return sol
+		if(method=='simpson'):
+			sol=SimpsonsRule(a,b,n,fn)
+			return sol
+
+
+
+
+#Example:
+>>> f=lambda x:x*x			
+>>> igr=Integrate()
+>>> for method in ['trapezoid','simpson']:
+	solution=igr.solve(1,6,100,f,method)
+	print(solution)
+
+	
+71.66875
+71.66666666666666
