@@ -1,0 +1,65 @@
+import numpy as np
+
+
+maximize=[1,3]
+
+constraintA=[10,5,4]
+constraintB=[(1,2),(1,0),(0,1)]
+
+
+class LPsolver():
+
+    def solve(self,x,y,z):   
+        lx=len(x)
+        ly=len(y)
+        arr=np.array(z)
+        arr=np.concatenate((arr,np.identity(len(y))),1)
+        y=np.array(y)
+        a=[0]*lx
+
+        arr=np.insert(arr,lx+ly,y,1)
+        B=np.array([0]*ly)
+        C=np.array(x+[0]*ly)
+        bx=range(lx,lx+ly)
+        while(1):
+            maxp=[]
+            minp=[]
+            for i in range(lx+ly):
+                maxp.append(C[i]-np.dot(B,arr[:,i]))
+
+
+            z=maxp.index(max(maxp))
+
+            if maxp[z]<=0:
+                break
+            for i in range(ly):
+                if arr[i,z]!=0:
+                    minp.append(arr[i,-1]/arr[i,z])
+                else:
+                    minp.append(10000000000)
+            q=filter(lambda x:x>0,minp)
+            if q==[]:
+                return "unbounded function"
+                break
+            r=minp.index(min(q))
+
+            B[r]=C[z]
+            bx[r]=z
+            arr[r,:]=arr[r,:]/arr[r,z]
+            for i in range(ly):
+                if(i!=r):
+                    arr[i,:]=arr[i,:]-(arr[i,z]/arr[r,z])*arr[r,:]
+
+        for i in range(len(bx)):
+            if bx[i]<lx:
+                a[bx[i]]=arr[i,-1]
+        a=map(int,a)
+
+        a.append(sum([a[i]*x[i] for i in range(lx)]))
+        return a
+
+
+lps=LPsolver()
+solution=lps.solve(maximize,constraintA,constraintB)
+print(solution)
+
